@@ -64,26 +64,25 @@ public class ReverseNodesInKGroup {
      */
     class Solution {
         public ListNode reverseKGroup(ListNode head, int k) {
-            ListNode ppre = new ListNode(-1);
-            ppre.next = head;
-            ListNode pre = ppre;
-
-            while (true) {
+            ListNode hair = new ListNode(-1);
+            hair.next = head;
+            ListNode pre = hair;
+            int len =0;
+            ListNode tmp = head;
+            while(tmp != null){
+                len++;
+                tmp = tmp.next;
+            }
+            while (len>=k) {
                 ListNode tail = pre.next;
                 ListNode cur = pre.next;
                 for (int i = 0; i < k; i++) {
-                    if (tail == null) {
-                        return ppre.next;
-                    }
                     tail = tail.next;
-                    if (tail == null && i!=k-1) {
-                        return ppre.next;
-                    }
                 }
                 ListNode ccur = cur.next;
-                ListNode pppre = cur;
+                ListNode phair = cur;
                 for (int i = 2; i <= k; i++) {
-                    pppre.next = ccur.next;
+                    phair.next = ccur.next;
                     ccur.next = pre.next;
                     pre.next = ccur;
                     if(i!=k) {
@@ -95,8 +94,10 @@ public class ReverseNodesInKGroup {
 
                 for (int i = 0; i < k; i++) {
                     pre = pre.next;
+                    len--;
                 }
             }
+            return hair.next;
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)
