@@ -60,12 +60,6 @@ public class ReconstructItinerary {
 
         public List<String> findItinerary(List<List<String>> tickets) {
             Collections.sort(tickets, (a, b) -> a.get(1).compareTo(b.get(1)));
-            for (int i = 1; i < tickets.size(); i++) {
-                if (tickets.get(i).get(0).equals(tickets.get(i-1).get(0))
-                        && tickets.get(i).get(1).equals(tickets.get(i-1).get(1))) {
-                    tickets.remove(i);
-                }
-            }
             path.add("JFK");
             boolean[] used = new boolean[tickets.size()];
             backTracking((ArrayList) tickets, used);
