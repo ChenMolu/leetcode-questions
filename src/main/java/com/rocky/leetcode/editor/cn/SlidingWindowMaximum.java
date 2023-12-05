@@ -44,6 +44,7 @@
 package com.rocky.leetcode.editor.cn;
 
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class SlidingWindowMaximum {
@@ -54,7 +55,6 @@ public class SlidingWindowMaximum {
 
     class MyQueue {
         Deque<Integer> queue = new LinkedList<>();
-
         void poll(int val) {
             if (!queue.isEmpty() && val == queue.peek()) {
                 queue.poll();
