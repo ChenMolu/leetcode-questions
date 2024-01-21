@@ -59,9 +59,10 @@
 // Related Topics 设计 哈希表 链表 双向链表 👍 3010 👎 0
 
 
-package com.rocky.leetcode.editor.cn;
+//package com.rocky.leetcode.editor.cn;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LruCache {
 //    public static void main(String[] args) {
@@ -70,37 +71,76 @@ public class LruCache {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class LRUCache {
+
+        class Node {
+            int key,value;
+            Node prev, next;
+            public Node() {
+            }
+
+            public Node(int key, int value) {
+                this.key = key;
+                this.value = value;
+            }
+        }
+
+        private void addToHead(Node node) {
+            node.prev = head;
+            node.next = head.next;
+            head.next.prev = node;
+            head.next = node;
+        }
+
+        private void remove(Node node) {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+
+        private Node removeLast() {
+            Node cur = tail.prev;
+            remove(cur);
+            return cur;
+        }
         private int capacity;
-
-        LinkedHashMap<Integer, Integer> linkedHashMap = new LinkedHashMap<>();
-
+        private int size;
+        private Map<Integer, Node> cache = new HashMap<>();
+        private Node head, tail;
         public LRUCache(int capacity) {
             this.capacity = capacity;
+            this.size = 0;
+            head = new Node();
+            tail = new Node();
+            head.next = tail;
+            tail.prev = head;
         }
 
         public int get(int key) {
-            if(!linkedHashMap.containsKey(key)) {
+            if(!cache.containsKey(key)) {
                 return -1;
             }
-            int value = linkedHashMap.get(key);
-            linkedHashMap.remove(key);
-            linkedHashMap.put(key, value);
-            return value;
+            Node cur = cache.get(key);
+            remove(cur);
+            addToHead(cur);
+            return cur.value;
         }
 
         public void put(int key, int value) {
-            if(linkedHashMap.containsKey(key)) {
-                linkedHashMap.remove(key);
-                linkedHashMap.put(key, value);
-                return ;
+            Node node = cache.get(key);
+            if(node == null) {
+                Node cur = new Node(key, value);
+                cache.put(key, cur);
+                addToHead(cur);
+                ++size;
+                if(size > capacity) {
+                    Node last = removeLast();
+                    cache.remove(last.key);
+                    --size;
+                }
+            } else {
+                node.value = value;
+                remove(node);
+                addToHead(node);
             }
-            if(linkedHashMap.size() == capacity) {
-                Integer oldKey = linkedHashMap.keySet().iterator().next();
-                linkedHashMap.remove(oldKey);
-                linkedHashMap.put(key, value);
-                return;
-            }
-            linkedHashMap.put(key,value);
         }
     }
 
